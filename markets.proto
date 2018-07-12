@@ -37,6 +37,7 @@ message Market {
 	string details = 12;
 	repeated string tags = 13;
 	bool is_featured = 14; // if true, this market is specially featured on our website
+	string category = 15;
 };
 
 message Prediction {
