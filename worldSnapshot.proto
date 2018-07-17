@@ -1,0 +1,19 @@
+
+syntax = "proto3";
+
+// How to use protobuf imports
+//   1. import paths are file paths relative to `-I` (--proto_path) imports on commandline
+//   2. imported types, when used, must be prefixed by package name. (Probably full package name if there's multiple parts/dots in package name.)
+//   3. when compiling, two new flags must be added:
+//     3a. `-I ../augur-node/proto`    // required for import to resolve
+//     3b. `../augur-node/proto/*.proto` // compile these proto, which is necessary for their types to be built in the generated code
+
+import "markets.proto";
+import "augurMarkets.proto";
+
+package worldsnapshot;
+
+message WorldSnapshot {
+  markets.MarketsSummary marketsSummary = 1; // MarketsSummary.generation_time serves as gen time for WorldSnapshot
+  repeated augur.MarketInfo marketInfos = 2; // these MarketInfos are expected be the same ones used to generate MarketsSummary
+}
