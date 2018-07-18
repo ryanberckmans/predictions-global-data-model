@@ -38,6 +38,7 @@ message Market {
 	repeated string tags = 13;
 	bool is_featured = 14; // if true, this market is specially featured on our website
 	string category = 15;
+	uint64 last_trade_time = 16; // time of last executed trade; unix timestamp, seconds since epoch
 };
 
 message Prediction {
@@ -47,8 +48,8 @@ message Prediction {
 };
 
 message MarketsSnapshot {
-  MarketsSummary markets_summary = 1; 
-  repeated MarketInfo market_infos = 2; 
+  MarketsSummary markets_summary = 1;
+  repeated MarketInfo market_infos = 2;
 };
 
 message MarketInfo {
