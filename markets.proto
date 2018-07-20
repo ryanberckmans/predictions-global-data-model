@@ -45,14 +45,15 @@ message Prediction {
 	string name = 1;
 	float percent = 2; // Value between [0, 100] used in yesno and categorical markets
 	float value = 3; // Used in scalar markets
-	BidAsk bid_ask = 4;
+	BidAsk best_bid = 4;
+	BidAsk best_ask = 5;
 };
 
+// BidAsk represents a single price point in a market outcome's Order book.
+// Note that one bid BidAsk may represent an aggregation of N Orders.
 message BidAsk {
-	float best_bid = 1;
-	float best_bid_quantity = 2;
-	float best_ask = 3;
-	float best_ask_quantity = 4;
+	float price = 1;
+	float amount = 2; // ie. quantity of shares in the order book at this price
 }
 
 message MarketsSnapshot {
