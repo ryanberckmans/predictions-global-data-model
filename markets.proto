@@ -45,7 +45,15 @@ message Prediction {
 	string name = 1;
 	float percent = 2; // Value between [0, 100] used in yesno and categorical markets
 	float value = 3; // Used in scalar markets
+	BidAsk bid_ask = 4;
 };
+
+message BidAsk {
+	float best_bid = 1;
+	float best_bid_quantity = 2;
+	float best_ask = 3;
+	float best_ask_quantity = 4;
+}
 
 message MarketsSnapshot {
   MarketsSummary markets_summary = 1;
