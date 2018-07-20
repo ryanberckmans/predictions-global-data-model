@@ -39,14 +39,15 @@ message Market {
 	bool is_featured = 14; // if true, this market is specially featured on our website
 	string category = 15;
 	uint64 last_trade_time = 16; // time of last executed trade; unix timestamp, seconds since epoch
+	map<uint64, LiquidityAtPrice> best_bids = 17; // map key is augur-node OutcomeInfo.id
+	map<uint64, LiquidityAtPrice> best_asks = 18; // map key is augur-node OutcomeInfo.id
 };
 
 message Prediction {
 	string name = 1;
 	float percent = 2; // Value between [0, 100] used in yesno and categorical markets
 	float value = 3; // Used in scalar markets
-	LiquidityAtPrice best_bid = 4;
-	LiquidityAtPrice best_ask = 5;
+	uint64 outcome_id = 4; // OutcomeInfo.id associated with this Prediction. OutcomeInfo and Prediction have a 1-to-1 correspondence.
 };
 
 // LiquidityAtPrice represents a single price point in a market outcome's Order book.
