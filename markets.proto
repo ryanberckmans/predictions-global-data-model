@@ -39,7 +39,7 @@ message Market {
 	bool is_featured = 14; // if true, this market is specially featured on our website
 	string category = 15;
 	uint64 last_trade_time = 16; // time of last executed trade; unix timestamp, seconds since epoch
-	
+
 	map<uint64, LiquidityAtPrice> best_bids = 17; // map key is augur-node OutcomeInfo.id
 	map<uint64, LiquidityAtPrice> best_asks = 18; // map key is augur-node OutcomeInfo.id
 };
@@ -48,6 +48,12 @@ message MarketDetail {
 	string market_id = 1;
 	Market market_summary = 2;
 	MarketInfo market_info = 3;
+	repeated RelatedMarket related_markets = 4;
+};
+
+message RelatedMarket {
+	string market_id = 1;
+	repeated RelatedMarketReason reasons = 2; // reasons why this market is related
 };
 
 message Prediction {
@@ -111,19 +117,6 @@ message MarketInfo {
         repeated OutcomeInfo outcomes = 39;
 };
 
-enum ReportingState {
-        PRE_REPORTING = 0;
-        DESIGNATED_REPORTING = 1;
-        OPEN_REPORTING = 2;
-        CROWDSOURCING_DISPUTE = 3;
-        AWAITING_NEXT_WINDOW = 4;
-        AWAITING_FINALIZATION = 5;
-        FINALIZED = 6;
-        FORKING = 7;
-        AWAITING_NO_REPORT_MIGRATION = 8;
-        AWAITING_FORK_MIGRATION = 9;
-};
-
 message NormalizedPayout {
         bool is_invalid = 1;
         repeated string payout = 2;
@@ -135,3 +128,32 @@ message OutcomeInfo {
         string price = 3;
         string description = 4;
 };
+
+//******************************************************
+// BEGIN - all enums
+// WARNING - proto3 eliminated "optional" keyword such that all simple types (including enums) are initialized to an empty/zero value for new protobuf objects. This means that enums are initialized to 0 eg. in JavaScript "new Foo()" and golang's "Foo{}". ---> our convention is that all enums must start with `MY_TYPE_UNDEFINED = 0` to allow us to check if an enum was explicitly set. For some enums this won't matter, but for others it is essential to know if an enum was set by client or not. All enums should do this for consistency. (MY_TYPE_ prefix is required because enum values must be unique within their protobuf package.)
+//******************************************************
+
+enum RelatedMarketReason {
+	RELATED_MARKET_REASON_UNDEFINED = 0;
+	CATCH_ALL = 1; // catch-all for markets which are related, but not for a specific reason
+	SAME_AUTHOR = 2; // related because this market wa created by same author
+}
+
+enum ReportingState {
+	// WARNING - ReportingState doesn't start with 'UNDEFINED = 0' because we added this convention after ReportingState, and we don't want to make a backwards-incompatible field numbering change because we store serialized protobuf messages as part of our data platform.
+	PRE_REPORTING = 0;
+	DESIGNATED_REPORTING = 1;
+	OPEN_REPORTING = 2;
+	CROWDSOURCING_DISPUTE = 3;
+	AWAITING_NEXT_WINDOW = 4;
+	AWAITING_FINALIZATION = 5;
+	FINALIZED = 6;
+	FORKING = 7;
+	AWAITING_NO_REPORT_MIGRATION = 8;
+	AWAITING_FORK_MIGRATION = 9;
+};
+
+//******************************************************
+// END - all enums
+//******************************************************
