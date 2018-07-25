@@ -137,7 +137,7 @@ message OutcomeInfo {
 enum RelatedMarketReason {
 	RELATED_MARKET_REASON_UNDEFINED = 0;
 	CATCH_ALL = 1; // catch-all for markets which are related, but not for a specific reason
-	SAME_AUTHOR = 2; // related because this market wa created by same author
+	SAME_AUTHOR = 2; // related because this market was created by same author
 }
 
 enum ReportingState {
