@@ -39,8 +39,15 @@ message Market {
 	bool is_featured = 14; // if true, this market is specially featured on our website
 	string category = 15;
 	uint64 last_trade_time = 16; // time of last executed trade; unix timestamp, seconds since epoch
+	
 	map<uint64, LiquidityAtPrice> best_bids = 17; // map key is augur-node OutcomeInfo.id
 	map<uint64, LiquidityAtPrice> best_asks = 18; // map key is augur-node OutcomeInfo.id
+};
+
+message MarketDetail {
+	string market_id = 1;
+	Market market_summary = 2;
+	MarketInfo market_info = 3;
 };
 
 message Prediction {
