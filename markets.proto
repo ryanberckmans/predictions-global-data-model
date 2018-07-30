@@ -34,14 +34,16 @@ message Market {
 	uint64 creation_time = 9; // unix timestamp, seconds since epoch
 	uint64 creation_block = 10;
 	string resolution_source = 11;
-	string details = 12;
+	string details = 12 [deprecated=true]; // Deprecated; always empty. Use MarketDetail.MarketInfo.details instead.
 	repeated string tags = 13;
 	bool is_featured = 14; // if true, this market is specially featured on our website
 	string category = 15;
 	uint64 last_trade_time = 16; // time of last executed trade; unix timestamp, seconds since epoch
-	
 	map<uint64, LiquidityAtPrice> best_bids = 17; // map key is augur-node OutcomeInfo.id
 	map<uint64, LiquidityAtPrice> best_asks = 18; // map key is augur-node OutcomeInfo.id
+	Price volume = 19; // total historical volume
+	map<uint64, ListLiquidityAtPrice> bids = 20; // map key is augur-node OutcomeInfo.id; lists expected to be sorted by best best/ask (see ListLiquidityAtPrice)
+	map<uint64, ListLiquidityAtPrice> asks = 21; // map key is augur-node OutcomeInfo.id; lists expected to be sorted by best best/ask (see ListLiquidityAtPrice)
 };
 
 message MarketDetail {
@@ -62,6 +64,10 @@ message Prediction {
 message LiquidityAtPrice {
 	float price = 1;
 	float amount = 2; // ie. quantity of shares in the order book at this price
+}
+
+message ListLiquidityAtPrice {
+	repeated LiquidityAtPrice liquidity_at_price = 1; // expected to be sorted such that liquidity_at_price[0] is best bid or ask. Ie. if liquidity_at_price represents a list of bids, then it's sorted by price descending such that [0] is highest bid; if it represents a list of asks, then it's sorted by price ascending such that [0] is lowest ask.
 }
 
 message MarketsSnapshot {
