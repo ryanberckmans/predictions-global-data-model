@@ -8,6 +8,11 @@ message MarketsSummary {
 	Price total_markets_capitalization = 3;
 	repeated Market markets = 4;
 	uint64 generation_time = 5; // time at which this MarketsSummary was generated
+	LiquidityScoreTranches liquidity_score_tranches = 6; // The set of liquidity tranches computed by the backend for each market, sorted ascending
+};
+
+message LiquidityScoreTranches {
+	repeated uint64 tranches = 1;
 };
 
 message Price {
@@ -44,6 +49,7 @@ message Market {
 	Price volume = 19; // total historical volume
 	map<uint64, ListLiquidityAtPrice> bids = 20; // map key is augur-node OutcomeInfo.id; lists expected to be sorted by best best/ask (see ListLiquidityAtPrice)
 	map<uint64, ListLiquidityAtPrice> asks = 21; // map key is augur-node OutcomeInfo.id; lists expected to be sorted by best best/ask (see ListLiquidityAtPrice)
+	map<uint64, float> liquidity_score_by_tranche = 22; // map key is the eth amount you can buy and immediately sell in the market and the value is the percent ofvalue you will retain
 };
 
 message MarketDetail {
