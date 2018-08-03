@@ -8,11 +8,11 @@ message MarketsSummary {
 	Price total_markets_capitalization = 3;
 	repeated Market markets = 4;
 	uint64 generation_time = 5; // time at which this MarketsSummary was generated
-	LiquidityScoreTranches liquidity_score_tranches = 6; // The set of liquidity tranches computed by the backend for each market, sorted ascending
+	LiquidityMetricsConfig liquidity_metrics_config = 6;
 };
 
-message LiquidityScoreTranches {
-	repeated uint64 tranches = 1;
+message LiquidityMetricsConfig {
+	repeated uint64 milliether_tranches = 1; // set of liquidity tranches computed by the backend for each market, sorted ascending; used in LiquidityMetrics
 };
 
 message Price {
@@ -49,7 +49,7 @@ message Market {
 	Price volume = 19; // total historical volume
 	map<uint64, ListLiquidityAtPrice> bids = 20; // map key is augur-node OutcomeInfo.id; lists expected to be sorted by best best/ask (see ListLiquidityAtPrice)
 	map<uint64, ListLiquidityAtPrice> asks = 21; // map key is augur-node OutcomeInfo.id; lists expected to be sorted by best best/ask (see ListLiquidityAtPrice)
-	map<uint64, float> liquidity_score_by_tranche = 22; // map key is the eth amount you can buy and immediately sell in the market and the value is the percent ofvalue you will retain
+	LiquidityMetrics liquidity_metrics = 22;
 };
 
 message MarketDetail {
@@ -64,6 +64,10 @@ message Prediction {
 	float value = 3; // Used in scalar markets
 	uint64 outcome_id = 4; // OutcomeInfo.id associated with this Prediction. OutcomeInfo and Prediction have a 1-to-1 correspondence.
 };
+
+message LiquidityMetrics {
+	map<uint64, float> retention_ratio_by_milliether_tranche = 1; // map key is the milliETH amount you can spend to buy complete sets of shares from the system, and then immediately sell these complete sets into the market, and the map value is the ratio [0,1] of ETH amount you will retain after this buy/sell process.
+}
 
 // LiquidityAtPrice represents a single price point in a market outcome's Order book.
 // Note that one bid LiquidityAtPrice may represent an aggregation of N Orders.
