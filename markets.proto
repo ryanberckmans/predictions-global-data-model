@@ -50,7 +50,16 @@ message Market {
 	map<uint64, ListLiquidityAtPrice> bids = 20; // map key is augur-node OutcomeInfo.id; lists expected to be sorted by best best/ask (see ListLiquidityAtPrice)
 	map<uint64, ListLiquidityAtPrice> asks = 21; // map key is augur-node OutcomeInfo.id; lists expected to be sorted by best best/ask (see ListLiquidityAtPrice)
 	LiquidityMetrics liquidity_metrics = 22;
+	MarketDataSources market_data_sources = 23;
 };
+
+message MarketDataSources {
+	string market_detail_file_name = 1; // previously we had one google storage file per market, and then realized this was not cost-effective in terms of GCP billing because a large number of tiny files is extremely expensive. Now we have put MarketDetail into bucket files, so there's a few orders of magnitude fewer files, but the files are larger. Ie. when a user navigates to a market detail page, it loads data for a bucket of detail pages. Eg. market_detail_file_name == "3" which then is prefixed with "https://storage.googleapis.com/predictions-global-prod/augur/markets/" for a final filename of "https://storage.googleapis.com/predictions-global-prod/augur/markets/3", and the contents of this file is a MarketDetailByMarketId.
+}
+
+message MarketDetailByMarketId {
+	map<string, MarketDetail> market_detail_by_market_id = 1; // map key is MarketDetail.market_id
+}
 
 message MarketDetail {
 	string market_id = 1;
